@@ -1,0 +1,868 @@
+﻿<Window x:Class="Fan_Manager_standalone.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Fan_Manager_standalone"
+             xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+MouseLeftButtonUp="Ellipse_MouseLeftButtonUp"
+        WindowStartupLocation="CenterScreen"
+
+              x:Name="Fan" Width="788" Height="493.8" Background="White"  WindowStyle="None"  Loaded="Fan_Loaded" ResizeMode="NoResize" Title="FanManager" Foreground="#FF0028FF" BorderBrush="#FF2B27CB"
+   >
+
+    <FrameworkElement.Resources>
+        <Style x:Key="EllipseStyle1_t2" TargetType="{x:Type Ellipse}">
+            <Style.Triggers>
+                <Trigger Property="FrameworkElement.Tag" Value="1">
+                    <Setter Property="Shape.Stroke" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="Shape.Stroke" Value="#FF606060"/>
+        </Style>
+
+
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true"
+                       Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1"
+                       StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="RadioButton.Static.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="RadioButton.Static.Border" Color="#FF707070"/>
+        <Style x:Key="OptionMarkFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="14,0,0,0" SnapsToDevicePixels="true"
+                       Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1"
+                       StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="RadioButton.MouseOver.Background" Color="Black"/>
+        <SolidColorBrush x:Key="RadioButton.MouseOver.Border" Color="#FF5593FF"/>
+        <SolidColorBrush x:Key="RadioButton.MouseOver.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="RadioButton.Disabled.Background" Color="#FFE6E6E6"/>
+        <SolidColorBrush x:Key="RadioButton.Disabled.Border" Color="#FFBCBCBC"/>
+        <SolidColorBrush x:Key="RadioButton.Disabled.Glyph" Color="#FF707070"/>
+        <SolidColorBrush x:Key="RadioButton.Pressed.Background" Color="#FFD9ECFF"/>
+        <SolidColorBrush x:Key="RadioButton.Pressed.Border" Color="#FF3C77DD"/>
+        <SolidColorBrush x:Key="RadioButton.Pressed.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="RadioButton.Static.Glyph" Color="#FF212121"/>
+        <Style x:Key="RadioButtonStyle1_T1" TargetType="{x:Type RadioButton}">
+            <Setter Property="FrameworkElement.FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Control.Background" Value="{StaticResource RadioButton.Static.Background}"/>
+            <Setter Property="Control.BorderBrush" Value="{StaticResource RadioButton.Static.Border}"/>
+            <Setter Property="Control.Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="Control.BorderThickness" Value="1"/>
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="true">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Ellipse x:Name="ellipse" Grid.ColumnSpan="2" Fill="Red" HorizontalAlignment="Left" Height="20"
+                       VerticalAlignment="Top" Width="20" Stroke="White" StrokeThickness="2"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="ContentControl.HasContent" Value="true">
+                                <Setter Value="{StaticResource OptionMarkFocusVisual}" Property="FrameworkElement.FocusVisualStyle"/>
+                                <Setter Property="Control.Padding" Value="4,-1,0,0"/>
+                            </Trigger>
+                            <Trigger Property="UIElement.IsMouseOver" Value="true"/>
+                            <Trigger Property="UIElement.IsEnabled" Value="false"/>
+                            <Trigger Property="ToggleButton.IsChecked" Value="true">
+                                <Setter TargetName="ellipse" Property="Shape.Stroke" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="ToggleButton.IsChecked" Value="False">
+                                <Setter TargetName="ellipse" Property="Shape.Stroke" Value="#FF7A7A7A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="RadioButtonStyle1_FAN" TargetType="{x:Type RadioButton}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource RadioButton.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource RadioButton.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="true">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Height="46" Margin="0" VerticalAlignment="Center" Width="46">
+                                <Rectangle x:Name="rectangle" Margin="0" Width="46" Height="46" StrokeThickness="0"
+                                    Fill="{TemplateBinding Background}" Stroke="{x:Null}">
+                                    <Rectangle.OpacityMask>
+                                        <ImageBrush ImageSource="btn_enable.png"/>
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Grid>
+                            <Border x:Name="radioButtonBorder" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}" CornerRadius="100"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1,1,2,1"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Visibility="Hidden" OpacityMask="Black"/>
+                            <TextBlock x:Name="textBlock" Grid.Column="1" Margin="0" TextWrapping="Wrap"
+                                Text="{TemplateBinding Content}" VerticalAlignment="Center"
+                                HorizontalAlignment="Left" Foreground="#FFB4B4B4" FontSize="21.333" OpacityMask="Black" FontFamily="Leelawadee UI Semilight"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasContent" Value="true">
+                                <Setter Value="{StaticResource OptionMarkFocusVisual}" Property="FocusVisualStyle"/>
+                                <Setter Property="Padding" Value="4,-1,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="textBlock" Property="TextBlock.FontSize" Value="24"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false"/>
+                            <Trigger Property="IsPressed" Value="true"/>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter TargetName="rectangle" Property="OpacityMask">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="btn_disable.png"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="textBlock" Property="TextBlock.Foreground" Value="White"/>
+                                <Setter TargetName="textBlock" Property="TextBlock.FontSize" Value="24"/>
+                            </Trigger>
+                            <Trigger Value="{x:Null}" Property="IsChecked"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ControlTemplate x:Key="ButtonControlTemplate1" TargetType="{x:Type Button}">
+            <Grid x:Name="grid" Margin="0" Width="Auto" Height="Auto" Background="{x:Null}">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates"/>
+                </VisualStateManager.VisualStateGroups>
+                <Image x:Name="Image_ic_close_png" Margin="0" Source="white-gear-png-gear-icon-png-white-gear-icon-30.png" Stretch="Fill"
+                    Width="Auto" Height="60" OpacityMask="White"/>
+                <Rectangle x:Name="rectangle" Margin="0" Width="Auto" Height="60" Fill="{TemplateBinding Background}"
+                    StrokeThickness="0" Stroke="{x:Null}">
+                    <Rectangle.OpacityMask>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#00000000"/>
+                            <GradientStop Color="#33FFFFFF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter TargetName="rectangle" Property="OpacityMask">
+                        <Setter.Value>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#00000000" Offset="1"/>
+                                <GradientStop Color="#66FFFFFF" Offset="0"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter TargetName="rectangle" Property="OpacityMask">
+                        <Setter.Value>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#00000000"/>
+                                <GradientStop Color="#66FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <SolidColorBrush x:Key="SliderThumb.Static.Foreground" Color="#FFE5E5E5"/>
+        <SolidColorBrush x:Key="SliderThumb.MouseOver.Background" Color="#FFDCECFC"/>
+        <SolidColorBrush x:Key="SliderThumb.MouseOver.Border" Color="#FF7Eb4EA"/>
+        <SolidColorBrush x:Key="SliderThumb.Pressed.Background" Color="#FFDAECFC"/>
+        <SolidColorBrush x:Key="SliderThumb.Pressed.Border" Color="#FF569DE5"/>
+        <SolidColorBrush x:Key="SliderThumb.Disabled.Background" Color="#FFF0F0F0"/>
+        <SolidColorBrush x:Key="SliderThumb.Disabled.Border" Color="#FFD9D9D9"/>
+        <SolidColorBrush x:Key="SliderThumb.Static.Background" Color="#FFF0F0F0"/>
+        <SolidColorBrush x:Key="SliderThumb.Static.Border" Color="#FFACACAC"/>
+        <ControlTemplate x:Key="SliderThumbHorizontalTop" TargetType="{x:Type Thumb}">
+            <Grid HorizontalAlignment="Center" UseLayoutRounding="true" VerticalAlignment="Center">
+                <Path x:Name="grip"
+                    Data="M 0,6 C 0,6 5.5,0 5.5,0 5.5,0 11,6 11,6 11,6 11,18 11,18 11,18 0,18 0,18 0,18 0,6 0,6 Z"
+                    Fill="{StaticResource SliderThumb.Static.Background}" Stretch="Fill" SnapsToDevicePixels="true"
+                    Stroke="{StaticResource SliderThumb.Static.Border}" StrokeThickness="1" UseLayoutRounding="true"
+                    VerticalAlignment="Center"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.MouseOver.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.MouseOver.Border}" Property="Stroke"/>
+                </Trigger>
+                <Trigger Property="IsDragging" Value="true">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Pressed.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Pressed.Border}" Property="Stroke"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Border}" Property="Stroke"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="SliderThumbHorizontalBottom" TargetType="{x:Type Thumb}">
+            <Grid HorizontalAlignment="Center" UseLayoutRounding="true" VerticalAlignment="Center">
+                <Path x:Name="grip"
+                    Data="M 0,12 C 0,12 5.5,18 5.5,18 5.5,18 11,12 11,12 11,12 11,0 11,0 11,0 0,0 0,0 0,0 0,12 0,12 Z"
+                    Fill="{StaticResource SliderThumb.Static.Background}" Stretch="Fill" SnapsToDevicePixels="true"
+                    Stroke="{StaticResource SliderThumb.Static.Border}" StrokeThickness="1" UseLayoutRounding="true"
+                    VerticalAlignment="Center"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.MouseOver.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.MouseOver.Border}" Property="Stroke"/>
+                </Trigger>
+                <Trigger Property="IsDragging" Value="true">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Pressed.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Pressed.Border}" Property="Stroke"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Border}" Property="Stroke"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key="RepeatButtonStyle_L" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Grid HorizontalAlignment="Stretch" Height="Auto" Margin="0" VerticalAlignment="Stretch" Width="Auto"
+                            ClipToBounds="true">
+                            <Rectangle Fill="{TemplateBinding BorderBrush}" HorizontalAlignment="Left" Height="25"
+                                VerticalAlignment="Top" Width="355" Margin="6.025,16.033,-183.408,0">
+                                <Rectangle.OpacityMask>
+                                    <ImageBrush ImageSource="slider_range_22.png" Stretch="Fill"/>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}"
+                            Width="{TemplateBinding Width}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ControlTemplate x:Key="SliderThumbHorizontalDefault" TargetType="{x:Type Thumb}">
+            <Grid HorizontalAlignment="Center" UseLayoutRounding="true" VerticalAlignment="Center">
+                <Rectangle x:Name="rectangle" HorizontalAlignment="Stretch" Height="60"
+                    Margin="-20.487,-9.966,-19.514,-10.035" StrokeThickness="2" VerticalAlignment="Stretch" Width="48"
+                    Fill="{TemplateBinding BorderBrush}" RenderTransformOrigin="0.5,0.5"
+                    UseLayoutRounding="false" Visibility="Hidden">
+                    <Rectangle.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform AngleX="32"/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Rectangle.RenderTransform>
+                    <Rectangle.OpacityMask>
+                        <ImageBrush ImageSource="slider_handle_layer12.png"/>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <Path x:Name="grip" Data="M 0,0 C 0,0 11,0 11,0 11,0 11,18 11,18 11,18 0,18 0,18 0,18 0,0 0,0 Z"
+                    Stretch="Fill" SnapsToDevicePixels="true" StrokeThickness="2" UseLayoutRounding="true"
+                    VerticalAlignment="Center">
+                    <Path.Fill>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF606060" Offset="0.046"/>
+                            <GradientStop Color="White" Offset="0.503"/>
+                            <GradientStop Color="#FF606060" Offset="0.943"/>
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                </Path>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter TargetName="rectangle" Property="Visibility" Value="Visible"/>
+                </Trigger>
+                <Trigger Property="IsDragging" Value="true">
+                    <Setter TargetName="rectangle" Property="Visibility" Value="Visible"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Border}" Property="Stroke"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="SliderHorizontal" TargetType="{x:Type Slider}">
+            <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TickBar x:Name="TopTick" Fill="{TemplateBinding Foreground}" Height="4" Margin="0,0,0,2"
+                        Placement="Top" Grid.Row="0" Visibility="Collapsed" OpacityMask="{x:Null}"/>
+                    <TickBar x:Name="BottomTick" Fill="{TemplateBinding Foreground}" Height="4" Margin="0,2,0,0"
+                        Placement="Bottom" Grid.Row="2" Visibility="Collapsed"/>
+                    <Border x:Name="TrackBackground" BorderThickness="1" Height="4.0" Margin="0" Grid.Row="1"
+                        VerticalAlignment="center">
+                        <Canvas Margin="-6,-1">
+                            <Rectangle x:Name="PART_SelectionRange"
+                                Height="4.0" Visibility="Hidden">
+                                <Rectangle.Fill>
+                                    <ImageBrush/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Canvas>
+                    </Border>
+                    <Track x:Name="PART_Track" Grid.Row="1" Margin="0" Grid.RowSpan="2" Height="60" OpacityMask="{x:Null}">
+                        <Track.DecreaseRepeatButton>
+                            <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{DynamicResource RepeatButtonStyle_L}" BorderBrush="#FF0096FF"/>
+                        </Track.DecreaseRepeatButton>
+                        <Track.IncreaseRepeatButton>
+                            <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource RepeatButtonTransparent}"
+                                Background="Transparent" BorderBrush="{Binding BorderBrush.DependencyObjectType, ElementName=border, Mode=OneWay}"/>
+                        </Track.IncreaseRepeatButton>
+                        <Track.Thumb>
+                            <Thumb x:Name="Thumb" Focusable="false" Height="40" OverridesDefaultStyle="true"
+                                Template="{DynamicResource SliderThumbHorizontalDefault}" VerticalAlignment="Center" Width="8"
+                                BorderBrush="{TemplateBinding BorderBrush}" Visibility="Visible" Foreground="{x:Null}" />
+                        </Track.Thumb>
+                    </Track>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="TickPlacement" Value="TopLeft">
+                    <Setter TargetName="TopTick" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="Thumb" Value="{StaticResource SliderThumbHorizontalTop}" Property="Template"/>
+                    <Setter TargetName="TrackBackground" Property="Margin" Value="5,2,5,0"/>
+                </Trigger>
+                <Trigger Property="TickPlacement" Value="BottomRight">
+                    <Setter TargetName="BottomTick" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="Thumb" Value="{StaticResource SliderThumbHorizontalBottom}" Property="Template"/>
+                    <Setter TargetName="TrackBackground" Property="Margin" Value="5,0,5,2"/>
+                </Trigger>
+                <Trigger Property="TickPlacement" Value="Both">
+                    <Setter TargetName="TopTick" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="BottomTick" Property="Visibility" Value="Visible"/>
+                </Trigger>
+                <Trigger Property="IsSelectionRangeEnabled" Value="true">
+                    <Setter TargetName="PART_SelectionRange" Property="Visibility" Value="Visible"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="true">
+                    <Setter TargetName="Thumb" Property="Foreground" Value="Blue"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="SliderThumbVerticalLeft" TargetType="{x:Type Thumb}">
+            <Grid HorizontalAlignment="Center" UseLayoutRounding="true" VerticalAlignment="Center">
+                <Path x:Name="grip"
+                    Data="M 6,11 C 6,11 0,5.5 0,5.5 0,5.5 6,0 6,0 6,0 18,0 18,0 18,0 18,11 18,11 18,11 6,11 6,11 Z"
+                    Fill="{StaticResource SliderThumb.Static.Background}" Stretch="Fill"
+                    Stroke="{StaticResource SliderThumb.Static.Border}"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.MouseOver.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.MouseOver.Border}" Property="Stroke"/>
+                </Trigger>
+                <Trigger Property="IsDragging" Value="true">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Pressed.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Pressed.Border}" Property="Stroke"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Border}" Property="Stroke"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="SliderThumbVerticalRight" TargetType="{x:Type Thumb}">
+            <Grid HorizontalAlignment="Center" UseLayoutRounding="true" VerticalAlignment="Center">
+                <Path x:Name="grip"
+                    Data="M 12,11 C 12,11 18,5.5 18,5.5 18,5.5 12,0 12,0 12,0 0,0 0,0 0,0 0,11 0,11 0,11 12,11 12,11 Z"
+                    Fill="{StaticResource SliderThumb.Static.Background}" Stretch="Fill"
+                    Stroke="{StaticResource SliderThumb.Static.Border}"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.MouseOver.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.MouseOver.Border}" Property="Stroke"/>
+                </Trigger>
+                <Trigger Property="IsDragging" Value="true">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Pressed.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Pressed.Border}" Property="Stroke"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Border}" Property="Stroke"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <SolidColorBrush x:Key="SliderThumb.Track.Border" Color="#FFD6D6D6"/>
+        <SolidColorBrush x:Key="SliderThumb.Track.Background" Color="#FFE7EAEA"/>
+        <ControlTemplate x:Key="SliderThumbVerticalDefault" TargetType="{x:Type Thumb}">
+            <Grid HorizontalAlignment="Center" UseLayoutRounding="true" VerticalAlignment="Center">
+                <Path x:Name="grip" Data="M 0.5,0.5 L 18.5,0.5 18.5,11.5 0.5,11.5 Z"
+                    Fill="{StaticResource SliderThumb.Static.Background}" Stretch="Fill"
+                    Stroke="{StaticResource SliderThumb.Static.Border}"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.MouseOver.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.MouseOver.Border}" Property="Stroke"/>
+                </Trigger>
+                <Trigger Property="IsDragging" Value="true">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Pressed.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Pressed.Border}" Property="Stroke"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Background}" Property="Fill"/>
+                    <Setter TargetName="grip" Value="{StaticResource SliderThumb.Disabled.Border}" Property="Stroke"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="SliderVertical" TargetType="{x:Type Slider}">
+            <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition MinWidth="{TemplateBinding MinWidth}" Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TickBar x:Name="TopTick" Grid.Column="0" Fill="{TemplateBinding Foreground}" Margin="0,0,2,0"
+                        Placement="Left" Visibility="Collapsed" Width="4"/>
+                    <TickBar x:Name="BottomTick" Grid.Column="2" Fill="{TemplateBinding Foreground}" Margin="2,0,0,0"
+                        Placement="Right" Visibility="Collapsed" Width="4"/>
+                    <Border x:Name="TrackBackground" BorderBrush="{StaticResource SliderThumb.Track.Border}"
+                        BorderThickness="1" Background="{StaticResource SliderThumb.Track.Background}" Grid.Column="1"
+                        HorizontalAlignment="center" Margin="0,5" Width="4.0">
+                        <Canvas Margin="-1,-6">
+                            <Rectangle x:Name="PART_SelectionRange" Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                                Visibility="Hidden" Width="4.0"/>
+                        </Canvas>
+                    </Border>
+                    <Track x:Name="PART_Track" Grid.Column="1">
+                        <Track.DecreaseRepeatButton>
+                            <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource RepeatButtonTransparent}"/>
+                        </Track.DecreaseRepeatButton>
+                        <Track.IncreaseRepeatButton>
+                            <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource RepeatButtonTransparent}"/>
+                        </Track.IncreaseRepeatButton>
+                        <Track.Thumb>
+                            <Thumb x:Name="Thumb" Focusable="false" Height="11" OverridesDefaultStyle="true"
+                                Template="{StaticResource SliderThumbVerticalDefault}" VerticalAlignment="Top" Width="18"/>
+                        </Track.Thumb>
+                    </Track>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="TickPlacement" Value="TopLeft">
+                    <Setter TargetName="TopTick" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="Thumb" Value="{StaticResource SliderThumbVerticalLeft}" Property="Template"/>
+                    <Setter TargetName="TrackBackground" Property="Margin" Value="2,5,0,5"/>
+                </Trigger>
+                <Trigger Property="TickPlacement" Value="BottomRight">
+                    <Setter TargetName="BottomTick" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="Thumb" Value="{StaticResource SliderThumbVerticalRight}" Property="Template"/>
+                    <Setter TargetName="TrackBackground" Property="Margin" Value="0,5,2,5"/>
+                </Trigger>
+                <Trigger Property="TickPlacement" Value="Both">
+                    <Setter TargetName="TopTick" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="BottomTick" Property="Visibility" Value="Visible"/>
+                </Trigger>
+                <Trigger Property="IsSelectionRangeEnabled" Value="true">
+                    <Setter TargetName="PART_SelectionRange" Property="Visibility" Value="Visible"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="true">
+                    <Setter TargetName="Thumb" Property="Foreground" Value="Blue"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key="SliderStyle_INC" TargetType="{x:Type Slider}">
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource SliderThumb.Static.Foreground}"/>
+            <Setter Property="Template" Value="{StaticResource SliderHorizontal}"/>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Vertical">
+                    <Setter Property="Template" Value="{StaticResource SliderVertical}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </FrameworkElement.Resources>
+    <Grid Margin="284.4,148.8,-156.4,-247.4">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid HorizontalAlignment="Left" Height="495" VerticalAlignment="Top" Width="760" Margin="-255,-150,0,0" MouseDown="Grid_MouseDown" Background="White"/>
+        <Grid x:Name="Main" Margin="-70,-67.661,188.6,259" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="28*"/>
+                <ColumnDefinition Width="79*"/>
+            </Grid.ColumnDefinitions>
+
+            <WrapPanel x:Name="WP_FANBtn" Height="432.661" VerticalAlignment="Top" Margin="35,10,160,-34.8" Grid.ColumnSpan="2">
+                <RadioButton Checked="RB_Fan_Auto_Checked" x:Name="RB_Fan_Auto" Content="Automatic Fan (EC)"
+                    Foreground="Black" FontFamily="Leelawadee UI Semilight" FontSize="22"
+                    Style="{DynamicResource RadioButtonStyle1_FAN}" VerticalContentAlignment="Center" Cursor="Hand"
+                    Height="46" Background="#FF0F00F9" Width="315"/>
+                <RadioButton  Checked="RB_Fan_Silent_Checked" x:Name="RB_Fan_Silent" Content="Silent Fan Mode"
+                    HorizontalAlignment="Left" Foreground="Black" FontFamily="Leelawadee UI Semilight" FontSize="24"
+                    Style="{DynamicResource RadioButtonStyle1_FAN}" VerticalContentAlignment="Center" Cursor="Hand"
+                    Height="46" Background="#FF0F00F9" Margin="0,0,10,0" Width="244.884"/>
+                <RadioButton Checked="RB_Fan_Max_Checked" x:Name="RB_Fan_Max" Content="Turbo Fan Mode" Foreground="Black" FontFamily="Leelawadee UI Semilight" FontSize="24"
+                    Style="{DynamicResource RadioButtonStyle1_FAN}" VerticalContentAlignment="Center" Cursor="Hand"
+                    Height="39.661" Margin="0,0,124,0" IsChecked="False" Background="#FF0F00F9" Width="280" VerticalAlignment="Center"/>
+                <RadioButton  Checked="RB_Fan_Static_Checked" x:Name="RB_Fan_Static" Content="Static Fan Mode"
+                    HorizontalAlignment="Left" Foreground="Black" FontFamily="Leelawadee UI Semilight" FontSize="24"
+                    Style="{DynamicResource RadioButtonStyle1_FAN}" VerticalContentAlignment="Center" Cursor="Hand"
+                    Height="41" IsChecked="False" Background="#FF0F00F9" Margin="0" Width="280"/>
+                <RadioButton  Checked="RB_Fan_Manual_Checked" x:Name="RB_Fan_Manual" Content="Advanced Fan Mode"
+                    HorizontalAlignment="Left" Foreground="Black" FontFamily="Leelawadee UI Semilight" FontSize="24"
+                    Style="{DynamicResource RadioButtonStyle1_FAN}" VerticalContentAlignment="Center" Cursor="Hand"
+                    Height="45" IsChecked="False" Background="#FF0F00F9" Width="272.093" OpacityMask="Black"/>
+            </WrapPanel>
+            <Grid Margin="-20,297.661,20,30.2" Style="{DynamicResource SLiderbello}" Grid.ColumnSpan="2">
+                <Grid.Resources>
+                    <Style x:Key="SLiderbello" TargetType="{x:Type Grid}"/>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="77*"/>
+                    <ColumnDefinition Width="30*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle x:Name="R_sliderFan_Ratio" Width="697" VerticalAlignment="Top" StrokeThickness="2"
+                    Margin="-52,7,-106,0" Height="45" HorizontalAlignment="Left" Grid.ColumnSpan="2">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF00A8FF" Offset="0"/>
+                            <GradientStop Color="#FF4600FF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                    <Rectangle.OpacityMask>
+                        <ImageBrush ImageSource="slider_gpu_setting_12.png"/>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <Slider x:Name="slider_FAN_AutoOffset" Width="362.399"
+                    VerticalAlignment="Bottom" SmallChange="1" Style="{DynamicResource SliderStyle_INC}"
+                    Margin="102.601,0,0,20" IsSnapToTickEnabled="true" IsMoveToPointEnabled="true" Height="60"
+                    HorizontalAlignment="Left" Cursor="Hand" Maximum="7" LargeChange="0" Background="White" Value="1" BorderBrush="#FF0600FF" PreviewMouseUp="slider_FAN_AutoOffset_ValueChanged" Foreground="White" OpacityMask="White" Grid.ColumnSpan="2" >
+                    <Slider.LayoutTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform AngleX="-32"/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Slider.LayoutTransform>
+                </Slider>
+            </Grid>
+            <Grid Margin="160,-125.199,-116.777,140.2" RenderTransformOrigin="0.5,0.5" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="0.75" ScaleY="0.75"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <Grid.Background>
+                    <ImageBrush ImageSource="system_fan_layer1_1.png"/>
+                </Grid.Background>
+                <Rectangle x:Name="R_FanLayer2" Margin="-133.198,-44.671,-42.005,-130.532" Width="296.537" Height="296.537" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Stroke="#FFFFF9F9" Fill="#FF001FFF" Grid.ColumnSpan="2">
+                    <Rectangle.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="0.75" ScaleY="0.75"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Rectangle.RenderTransform>
+                    <Rectangle.OpacityMask>
+                        <ImageBrush ImageSource="system_fan_layer2_1.png"/>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <Rectangle x:Name="R_FanLayer2_Copy" Margin="-94.37,-16.904,-6.979,-109.245" Width="227.571" Height="227.571" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Stroke="#FFFFF9F9" Fill="#FF001FFF" Grid.ColumnSpan="2">
+                    <Rectangle.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="0.75" ScaleY="0.75"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Rectangle.RenderTransform>
+                    <Rectangle.OpacityMask>
+                        <ImageBrush ImageSource="system_fan_layer3_1.png"/>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <Image Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="53.333" Margin="71.684,346.137,0,-13.41" VerticalAlignment="Top" Width="53.333" Source="Termomether_-_Cold-512.png" RenderTransformOrigin="0.5,0.5"/>
+            </Grid>
+            <TextBlock x:Name="Automatic_txt_fk" Margin="80.999,21.266,0,359.431" TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left" Foreground="Black" FontSize="24" OpacityMask="Black" Width="224.001" Text="Automatic Fan (EC)" Grid.ColumnSpan="2" FontFamily="Leelawadee UI Semilight"/>
+            <TextBlock x:Name="Turbo_txt_fk" Margin="80.999,110.339,0,270.358" TextWrapping="Wrap"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left" Foreground="Black" FontSize="24" OpacityMask="Black" Width="224.001" Text="Turbo Fan Mode" Grid.ColumnSpan="2" FontFamily="Leelawadee UI Semilight"/>
+            <TextBlock x:Name="Silent_txt_fk" Margin="80.999,67.152,0,313.544" TextWrapping="Wrap"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left" Foreground="Black" FontSize="24" OpacityMask="Black" Width="224.001" Text="Silent Fan Mode" Grid.ColumnSpan="2" FontFamily="Leelawadee UI Semilight"/>
+            <TextBlock x:Name="Static_txt_fk" Margin="80,150.661,0,230.036" TextWrapping="Wrap"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left" Foreground="Black" FontSize="24" OpacityMask="Black" Width="224.001" Text="Static Fan Mode" Grid.ColumnSpan="2" FontFamily="Leelawadee UI Semilight"/>
+            <TextBlock x:Name="Advanced_txt_fk" Margin="80,193.497,0,187.2" TextWrapping="Wrap"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left" Foreground="Black" FontSize="24" OpacityMask="Black" Width="224.001" Text="Advanced Fan Mode" Grid.ColumnSpan="2" FontFamily="Leelawadee UI Semilight"/>
+            <TextBlock x:Name="Temp" Margin="298.325,187.661,40.437,176.236" TextWrapping="Wrap"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center" Foreground="Black" FontSize="24" OpacityMask="Black" Width="60.963" Text="45°" FontFamily="Leelawadee UI Semilight" Grid.Column="1" Height="37.164"/>
+            <TextBlock x:Name="Temp_Copy" Margin="85.999,277.661,240,88.036" TextWrapping="Wrap"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center" Foreground="#FF0031FF" FontSize="18" OpacityMask="Black" Width="209.001" FontFamily="Leelawadee UI Semilight" Height="42.164" Grid.ColumnSpan="2" Text="  Static Fan Value"/>
+        </Grid>
+        <Grid x:Name="Lateral" HorizontalAlignment="Left" Height="527" Margin="-285,-150,0,0" VerticalAlignment="Top" Width="210" Grid.RowSpan="2" MouseDown="Grid_MouseDown">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                            <RotateTransform Angle="-40.236" CenterY="0.5" CenterX="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="#FF6D94D6" Offset="1"/>
+                    <GradientStop Color="#FF491AF0"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Button x:Name="Advanced_Fan" Content="Advanced Fan" HorizontalAlignment="Left" VerticalAlignment="Top" Width="210" Margin="0,285,0,0" Height="40" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" FontSize="20" Click="Button_Click_1"/>
+            <Button Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="210" Margin="0,240,0,0" Height="40" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" FontSize="20" Click="Button_Click"/>
+            <TextBlock HorizontalAlignment="Left" Margin="0,135.903,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="White" FontFamily="Leelawadee UI Semilight" Height="34.097" Width="210" FontSize="24" TextAlignment="Center"><Run Text="Fan"/><Run Text=" "/><Run Text="Manager"/></TextBlock>
+            <TextBlock HorizontalAlignment="Left" Margin="25,438.4,0,0" TextWrapping="Wrap" Text="By lKinder_Bueno" VerticalAlignment="Top" Width="180" FontSize="20" Foreground="White" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Cursor="Hand"/>
+            <Image HorizontalAlignment="Left" Height="100" Margin="55,20,0,0" VerticalAlignment="Top" Width="100" Source="Senza titolo-1.png" RenderTransformOrigin="0.5,0.45" OpacityMask="White"/>
+        </Grid>
+        <TextBlock x:Name="Temp_Copy1" Margin="465,-143.955,165,717.4" TextWrapping="Wrap" Foreground="#FF0031FF" FontSize="18" OpacityMask="Black" FontFamily="Leelawadee UI Semilight" RenderTransformOrigin="10.75,1.451" MouseDown="Temp_Copy1_MouseDown" HorizontalAlignment="Center" VerticalAlignment="Center" Height="18.955" Width="30" TextAlignment="Center" Cursor="Hand"><Run Text="X"/><LineBreak/><Run/></TextBlock>
+        <Canvas x:Name="Fan_control" Height="624" Margin="-20,-85,20,85">
+            <Grid Margin="0"      MouseLeftButtonUp="Ellipse_MouseLeftButtonUp"
+                MouseMove="Any_MouseMove"
+                Height="400" Width="600" Canvas.Left="-77" Canvas.Top="-35"
+>
+
+                <Grid Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="77*"/>
+                        <ColumnDefinition Width="35*"/>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="430*"/>
+                        <ColumnDefinition Width="28*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="textBlock_Copy8" HorizontalAlignment="Left" Margin="57,0,0,78.19" TextWrapping="Wrap"
+                        Text="12.5" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" TextAlignment="Center" Grid.ColumnSpan="2"/>
+                    <TextBlock x:Name="textBlock_Copy9" HorizontalAlignment="Left" Margin="3.4,0,0,42.79" TextWrapping="Wrap"
+                        Text="0" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" Grid.Column="1"/>
+                    <TextBlock x:Name="textBlock_Copy10" HorizontalAlignment="Left" Margin="8.7,0,0,31.4" TextWrapping="Wrap"
+                        Text="40" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" Grid.Column="2"/>
+                    <TextBlock x:Name="textBlock_Copy11" HorizontalAlignment="Right" Margin="0,0,9.1,31.4" TextWrapping="Wrap"
+                        Text="100" VerticalAlignment="Bottom" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight"
+                        FontSize="16" Grid.Column="3"/>
+                    <TextBlock x:Name="textBlock_Copy12" HorizontalAlignment="Left" Margin="49.7,0,0,31.4" TextWrapping="Wrap"
+                        Text="50" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" Grid.Column="3"/>
+                    <TextBlock x:Name="textBlock_Copy13" HorizontalAlignment="Left" Margin="118.3,0,0,31.4" TextWrapping="Wrap"
+                        Text="60" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" Grid.Column="3"/>
+                    <TextBlock x:Name="textBlock_Copy14" HorizontalAlignment="Right" Margin="0,0,221.9,31.4" TextWrapping="Wrap"
+                        Text="70" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" Grid.Column="3"/>
+                    <TextBlock x:Name="textBlock_Copy15" HorizontalAlignment="Right" Margin="0,0,153.5,31.4" TextWrapping="Wrap"
+                        Text="80" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" Grid.Column="3"/>
+                    <TextBlock x:Name="textBlock_Copy16" HorizontalAlignment="Right" Margin="0,0,82.5,31.4" TextWrapping="Wrap"
+                        Text="90" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" Grid.Column="3"/>
+                    <TextBlock x:Name="textBlock_Copy17" HorizontalAlignment="Left" Margin="16.3,0,0,31.4" TextWrapping="Wrap"
+                        Text="35" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" Grid.Column="1"/>
+                    <TextBlock x:Name="textBlock_Copy19" Margin="148.743,0,207.5,9.29" TextWrapping="Wrap" Text="Temp (°C)"
+                        Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16" VerticalAlignment="Bottom" Grid.Column="3"/>
+                    <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="57,0,0,116.89" TextWrapping="Wrap"
+                        Text="25" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" TextAlignment="Center" Width="31.146" Grid.ColumnSpan="2"/>
+                    <TextBlock x:Name="textBlock_Copy1" HorizontalAlignment="Left" Margin="56,0,0,152.99" TextWrapping="Wrap"
+                        Text="37.5" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" TextAlignment="Center" Width="35" Grid.ColumnSpan="2"/>
+                    <TextBlock x:Name="textBlock_Copy2" HorizontalAlignment="Left" Margin="55.854,0,0,191.89" TextWrapping="Wrap"
+                        Text="50" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" TextAlignment="Center" Width="31.146" Grid.ColumnSpan="2"/>
+                    <TextBlock x:Name="textBlock_Copy3" HorizontalAlignment="Left" Margin="52,0,0,226.89" TextWrapping="Wrap"
+                        Text="62.5" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" TextAlignment="Center" Width="35" Grid.ColumnSpan="2"/>
+                    <TextBlock x:Name="textBlock_Copy4" HorizontalAlignment="Left" Margin="52,0,0,266.89" TextWrapping="Wrap"
+                        Text="75" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" TextAlignment="Center" Width="35" Grid.ColumnSpan="2"/>
+                    <TextBlock x:Name="textBlock_Copy5" HorizontalAlignment="Left" Margin="52,0,0,303.266" TextWrapping="Wrap"
+                        Text="87.5" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" TextAlignment="Center" Width="35" Grid.ColumnSpan="2"/>
+                    <TextBlock x:Name="textBlock_Copy6" HorizontalAlignment="Left" Margin="27,0,0,340" TextWrapping="Wrap"
+                        Text="TURBO" Foreground="#FFC2C2C2" FontFamily="Leelawadee UI Semilight" FontSize="16"
+                        VerticalAlignment="Bottom" TextAlignment="Center" Width="60" Grid.ColumnSpan="2"/>
+                </Grid>
+                <Grid Margin="0,50,50,0" RenderTransformOrigin="0.5,0.5" Width="455" Height="300"
+                    HorizontalAlignment="Right" VerticalAlignment="Top" SnapsToDevicePixels="true">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="-1" ScaleX="1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                    <Grid>
+                        <Rectangle Height="37.5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="453"
+                            Stroke="#FF666666" Margin="0,225,0,0"/>
+                        <Rectangle Height="37.5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="453"
+                            Stroke="#FF666666"/>
+                        <Rectangle Height="37.5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="453"
+                            Stroke="#FF666666" Margin="0,75,0,0"/>
+                        <Rectangle Height="37.5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="453"
+                            Stroke="#FF666666" Margin="0,150,0,0"/>
+                    </Grid>
+                    <StackPanel Margin="0" Width="455" Height="300" HorizontalAlignment="Left" VerticalAlignment="Top"
+                        Orientation="Horizontal">
+                        <Rectangle Height="300" Margin="0,0,70,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35"
+                            Stroke="#FF8C8C8C"/>
+                        <Rectangle Height="300" Margin="0,0,70,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="70"
+                            Stroke="#FF8C8C8C"/>
+                        <Rectangle Height="300" Margin="0,0,70,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="70"
+                            Stroke="#FF8C8C8C"/>
+                        <Rectangle Height="300" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="69"
+                            Stroke="#FF8C8C8C"/>
+                    </StackPanel>
+                    <Rectangle  x:Name="R_layer" Margin="1,0,2,0" Width="452" Height="300"
+                        Stroke="#FF525252">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                        <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                        <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                                <GradientStop Color="#59007AFF" Offset="0"/>
+                                <GradientStop Color="#59FD0000" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Grid>
+                <StackPanel x:Name="SP_Text" Height="24.8" Margin="0,21.933,0,0" VerticalAlignment="Top"
+                    Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock x:Name="T_fan_Copy" HorizontalAlignment="Left" Height="25" TextWrapping="Wrap" Text="Fan :"
+                        Width="38" Foreground="#FF9A9A9A" FontSize="16" VerticalAlignment="Top" Margin="8,0,0,0"/>
+                    <TextBlock x:Name="T_fan" HorizontalAlignment="Left" Height="25" Margin="10,0" TextWrapping="Wrap" Width="50"
+                        Foreground="Black" FontSize="18.667" VerticalAlignment="Top" TextAlignment="Center"
+                        Background="White" OpacityMask="Black"/>
+                    <TextBlock x:Name="T_fan_Copy1" HorizontalAlignment="Left" Height="25" Margin="0" TextWrapping="Wrap" Text="%"
+                        Width="18" Foreground="#FF9A9A9A" FontSize="16" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="T_temp_Copy1" Height="25" Margin="20,0,0,0" TextWrapping="Wrap" Text="Temp :"
+                        Foreground="#FF9A9A9A" FontSize="16" HorizontalAlignment="Left" Width="50" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="T_temp" Height="25" Margin="10,0" TextWrapping="Wrap" Foreground="Black" FontSize="18.667"
+                        HorizontalAlignment="Left" Width="50" VerticalAlignment="Top" TextAlignment="Center"
+                        Background="White"/>
+                    <TextBlock x:Name="T_temp_Copy2" HorizontalAlignment="Left" Height="25" Margin="0,0,10,0" TextWrapping="Wrap"
+                        Text="°C" Width="20" Foreground="#FF9A9A9A" FontSize="16" VerticalAlignment="Top"/>
+                </StackPanel>
+            </Grid>
+
+            <Line x:Name="line12" Y1="10" X2="50" Y2="50"  Stroke="Red"  StrokeThickness="4" />
+            <Line x:Name="line23" Y1="10" X2="50" Y2="50"  Stroke="Red"  StrokeThickness="4" />
+            <Line x:Name="line34" Y1="10" X2="50" Y2="50"  Stroke="Red"  StrokeThickness="4" />
+            <Line x:Name="line45" Y1="10" X2="50" Y2="50"  Stroke="Red"  StrokeThickness="4" />
+            <Line x:Name="line56" Y1="10" X2="50" Y2="50"  Stroke="Red"  StrokeThickness="4" />
+            <Line x:Name="line67" Y1="10" X2="50" Y2="50"  Stroke="Red"  StrokeThickness="4" />
+
+            <Ellipse x:Name="t1" Height="22" Width="22" 
+                MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" 
+                MouseLeftButtonUp="Ellipse_MouseLeftButtonUp" 
+                MouseMove="Any_MouseMove" Canvas.Left="8" Canvas.Top="303"  Fill="White" Stroke="#FF00B1FF" StrokeThickness="2"  />
+            <Ellipse x:Name="t2" Fill="White" Height="22" Width="22" 
+                MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" 
+                MouseLeftButtonUp="Ellipse_MouseLeftButtonUp" 
+                MouseMove="Any_MouseMove" Canvas.Left="113" Canvas.Top="303" MaxWidth="100" MaxHeight="100" VerticalAlignment="Top" HorizontalAlignment="Center" Stroke="#FF4FFF00" StrokeThickness="2" />
+            <Ellipse x:Name="t3" Fill="White" Height="22" Width="22" 
+                MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" 
+                MouseLeftButtonUp="Ellipse_MouseLeftButtonUp" 
+                MouseMove="Any_MouseMove" Canvas.Left="150" Canvas.Top="228" MaxWidth="100" MaxHeight="100" VerticalAlignment="Top" HorizontalAlignment="Center" StrokeThickness="2" Stroke="#FFEBFF00" />
+            <Ellipse x:Name="t4" Fill="White" Height="22" Width="22" 
+                MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" 
+                MouseLeftButtonUp="Ellipse_MouseLeftButtonUp" 
+                MouseMove="Any_MouseMove" Canvas.Left="218" Canvas.Top="153.467" MaxWidth="100" MaxHeight="100" VerticalAlignment="Top" HorizontalAlignment="Center" StrokeThickness="2" Stroke="Orange" />
+            <Ellipse x:Name="t5" Fill="White" Height="22" Width="22" 
+                MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" 
+                MouseLeftButtonUp="Ellipse_MouseLeftButtonUp" 
+                MouseMove="Any_MouseMove" Canvas.Left="288" Canvas.Top="116.4" MaxWidth="100" MaxHeight="100" VerticalAlignment="Center" StrokeThickness="2" Stroke="#FF9900FF" />
+            <Ellipse x:Name="t6" Fill="White" Height="22" Width="22" 
+                MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" 
+                MouseLeftButtonUp="Ellipse_MouseLeftButtonUp" 
+                MouseMove="Any_MouseMove" Canvas.Left="360" Canvas.Top="41.533" MaxWidth="100" MaxHeight="100" VerticalAlignment="Top" HorizontalAlignment="Center" StrokeThickness="2" Stroke="#FFFF00F7" />
+            <Ellipse x:Name="t7" Fill="White" Height="22" Width="22" 
+                MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" 
+                MouseLeftButtonUp="Ellipse_MouseLeftButtonUp" 
+                MouseMove="Any_MouseMove" Canvas.Left="460" Canvas.Top="40" MaxWidth="100" MaxHeight="100" VerticalAlignment="Top" HorizontalAlignment="Center" StrokeThickness="2" Stroke="Red" RenderTransformOrigin="0.5,0.5" />
+            <Ellipse x:Name="min" Height="22" Width="22" 
+                MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" 
+                MouseLeftButtonUp="Ellipse_MouseLeftButtonUp" 
+                MouseMove="Any_MouseMove" Canvas.Left="8" Canvas.Top="303"  Fill="White" Stroke="#FF00B1FF" StrokeThickness="2" Visibility="Hidden"  />
+            <Ellipse x:Name="max" Fill="White" Height="22" Width="22" 
+                MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" 
+                MouseLeftButtonUp="Ellipse_MouseLeftButtonUp" 
+                MouseMove="Any_MouseMove" Canvas.Left="460.667" Canvas.Top="4.332" MaxWidth="100" MaxHeight="100" VerticalAlignment="Top" HorizontalAlignment="Center" StrokeThickness="2" Stroke="Red" RenderTransformOrigin="0.5,0.5" Visibility="Hidden" />
+            <Button Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Width="145" Height="40" FontSize="20" Canvas.Left="330" Canvas.Top="365" Background="White" Click="Button_Click_2" OpacityMask="White" BorderBrush="#FF0031FF"/>
+            <Button Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Width="145" Height="40" FontSize="20" Canvas.Left="-20" Canvas.Top="365" Background="White" Click="Button_Click_3" OpacityMask="White" BorderBrush="#FF0031FF"/>
+
+        </Canvas>
+        <TextBlock HorizontalAlignment="Left" Margin="470,318.4,0,0" TextWrapping="Wrap" Text="1.0" VerticalAlignment="Top" Width="180" FontSize="20" Foreground="Black"/>
+    </Grid>
+</Window>
